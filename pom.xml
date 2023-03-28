@@ -11,6 +11,7 @@
 	<groupId>com.ecommerce</groupId>
 	<artifactId>E-commerce</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
 	<name>E-commerce</name>
 	<description>Criando um E-commerce </description>
 	<properties>
