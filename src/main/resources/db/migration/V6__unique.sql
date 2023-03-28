@@ -1,0 +1,1 @@
+ALTER TABLE account ADD CONSTRAINT uk_password_recovery_id UNIQUE (password_recovery_id);

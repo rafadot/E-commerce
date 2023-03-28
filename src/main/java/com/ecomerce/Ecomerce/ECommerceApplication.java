@@ -1,4 +1,4 @@
-package com.ecommerce.Ecommerce;
+package com.ecomerce.Ecomerce;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -9,7 +9,5 @@ public class ECommerceApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ECommerceApplication.class, args);
 	}
-
-	//prod
 
 }

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>E-mail Password Recovery</title>
+
+  <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+    body{
+        background-color: #BCDDFE;
+        display: flex;
+        justify-content: center;
+    }
+
+    .container{
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        position: absolute;
+        width: 600px;
+        height: 550px;
+        top: 16px;
+        background: #FFFFFF;
+        border-radius: 20px;
+    }
+
+    .imagelogo{
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        top: 48px;
+    }
+
+    .logo{
+        width: 72px;
+    }
+
+    .content{
+        position: absolute;
+        left: 48px;
+        top: 168px;
+    }
+
+    .footer{
+        position: absolute;
+        bottom : 0px;
+        border-bottom-left-radius: 20px;
+        border-bottom-right-radius: 20px;
+        width: 100%;
+        height: 96px;
+        background-color: #40BFFF;
+    }
+
+    .icon-white{
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        left: 48px;
+        width: 48px;
+    }
+
+    .button{
+        position: absolute;
+        top: 12px;
+        left: 90px;
+        border: none;
+        background: none;
+        font-family: Poppins;
+        font-style: normal;
+        font-weight: 400;
+        color: #ffffff;
+        font-size: 48px;
+        cursor: pointer;
+    }
+
+    .title{
+        font-family: Poppins;
+        font-style: normal;
+        font-weight: 400;
+        color: #40BFFF;
+    }
+
+    .text{
+        font-family: Poppins;
+        font-style: normal;
+        font-weight: 400;
+        color: #223263;
+    }
+
+    </style>
+
+</head>
+<body>
+<main class="container">
+  <dig class="imagelogo">
+    <svg class="logo"width="72" height="72" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="72" height="72" rx="16" fill="#40BFFF"/>
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M50.8284 33.1716C52.3905 34.7337 52.3905 37.2663 50.8284 38.8284L38.8284 50.8284C37.2663 52.3905 34.7337 52.3905 33.1716 50.8284L21.1716 38.8284C19.6095 37.2663 19.6095 34.7337 21.1716 33.1716L33.1716 21.1716C34.7337 19.6095 37.2663 19.6095 38.8284 21.1716L50.8284 33.1716ZM36 29.6569L29.6569 36L36 42.3431L42.3431 36L36 29.6569Z" fill="white"/>
+    </svg>
+  </dig>
+  <div class="content">
+    <h1 class = "title">Olá, ${accountName}</h1>
+    <p class="text", class = "p">${text} : <strong>${code}</strong></p>
+  </div>
+  <footer class="footer">
+    <a href="https://e-commerce-adautomoises.vercel.app/">
+      <svg class="icon-white"width="72" height="72" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="72" height="72" rx="16" fill="white"/>
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M50.8284 33.1716C52.3905 34.7337 52.3905 37.2663 50.8284 38.8284L38.8284 50.8284C37.2663 52.3905 34.7337 52.3905 33.1716 50.8284L21.1716 38.8284C19.6095 37.2663 19.6095 34.7337 21.1716 33.1716L33.1716 21.1716C34.7337 19.6095 37.2663 19.6095 38.8284 21.1716L50.8284 33.1716ZM36 29.6569L29.6569 36L36 42.3431L42.3431 36L36 29.6569Z" fill="#40BFFF"/>
+      </svg>
+      <button class="button">E-commerce</button>
+    </a>
+  </footer>
+</main>
+
+</body>
+
+</html>
