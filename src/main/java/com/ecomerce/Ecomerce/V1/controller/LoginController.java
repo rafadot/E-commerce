@@ -36,7 +36,7 @@ public class LoginController {
         return new ResponseEntity<>(loginService.verifyCode(email,code),HttpStatus.OK);
     }
 
-    @PatchMapping("/recovery-password/change")
+    @GetMapping("/recovery-password/change")
     public ResponseEntity<Map<String,String>> passwordRecoveryChange(@RequestParam String email,
                                                                      @RequestParam String password){
         return new ResponseEntity<>(loginService.passwordRecoveryChange(email,password),HttpStatus.OK);

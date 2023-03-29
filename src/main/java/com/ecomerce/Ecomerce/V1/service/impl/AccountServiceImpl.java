@@ -6,7 +6,6 @@ import com.ecomerce.Ecomerce.V1.model.Account;
 import com.ecomerce.Ecomerce.V1.model.PasswordRecovery;
 import com.ecomerce.Ecomerce.V1.model.enums.Role;
 import com.ecomerce.Ecomerce.V1.repository.AccountRepository;
-import com.ecomerce.Ecomerce.V1.repository.PasswordRecoveryRepository;
 import com.ecomerce.Ecomerce.V1.service.interfaces.AccountService;
 import com.ecomerce.Ecomerce.exceptions.BadRequestException;
 import lombok.RequiredArgsConstructor;

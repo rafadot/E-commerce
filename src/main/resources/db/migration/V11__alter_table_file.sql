@@ -1,0 +1,2 @@
+ALTER TABLE public.product
+ALTER COLUMN profile TYPE VARCHAR;
