@@ -88,7 +88,7 @@ public class AccountServiceImpl implements AccountService {
         Optional<Account> account = accountRepository.findByEmail(email);
 
         if(account.isEmpty())
-            throw new BadRequestException("E-mail inválido");
+            throw new BadRequestException("E-mail não cadastrado!");
 
         return account.get();
     }
