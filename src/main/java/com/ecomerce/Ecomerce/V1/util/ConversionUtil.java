@@ -11,7 +11,7 @@ public class ConversionUtil {
     }
 
     public static String formatMoney(BigDecimal value){
-        DecimalFormat decimalFormat = new DecimalFormat("#,##0.00");
+        DecimalFormat decimalFormat = new DecimalFormat("#,##0.00",new DecimalFormatSymbols(Locale.forLanguageTag("pt-BR")));
         return decimalFormat.format(value);
     }
 }
