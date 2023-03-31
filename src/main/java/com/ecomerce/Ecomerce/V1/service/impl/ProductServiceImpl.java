@@ -28,9 +28,11 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductResponse create(ProductRequest request, MultipartFile file) throws IOException {
-        if(!accountService.accountContext().getRole().toString().equals("BRAND") && !accountService.accountContext().getRole().toString().equals("ADMIN")){
+        if(accountService.accountContext().getRole().stream()
+                .noneMatch(role -> role.getName().equals("BRAND"))
+        && accountService.accountContext().getRole().stream()
+                .noneMatch(role -> role.getName().equals("ADMIN")))
             throw new BindException("A criação de produtos é reservada apenas para MARCAS ou ADMs!");
-        }
 
         Product product = Product
                 .builder()

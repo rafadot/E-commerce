@@ -2,7 +2,6 @@ package com.ecomerce.Ecomerce.V1.controller;
 
 import com.ecomerce.Ecomerce.V1.dto.account.AccountRequest;
 import com.ecomerce.Ecomerce.V1.dto.account.AccountResponse;
-import com.ecomerce.Ecomerce.V1.model.enums.Role;
 import com.ecomerce.Ecomerce.V1.service.interfaces.AccountService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,11 +28,6 @@ public class AccountController {
     @GetMapping("/get")
     public ResponseEntity<List<AccountResponse>> getAll(){
         return new ResponseEntity<>(accountService.getAll(),HttpStatus.OK);
-    }
-
-    @GetMapping("/role")
-    public ResponseEntity<String> selectRole(@RequestParam Role role){
-        return new ResponseEntity<>(accountService.selectRole(role),HttpStatus.OK);
     }
 
 }

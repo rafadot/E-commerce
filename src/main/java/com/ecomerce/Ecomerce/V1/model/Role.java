@@ -1,6 +1,9 @@
 package com.ecomerce.Ecomerce.V1.model;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -12,21 +15,16 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class Account {
+public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
-    private String fullName;
-    private String email;
-    private String password;
+    private String name;
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "account_role",
             joinColumns = @JoinColumn(name = "account_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    private Set<Role> role = new HashSet<>();
-    @OneToOne(cascade = CascadeType.ALL)
-    private PasswordRecovery passwordRecovery;
+    private Set<Account> account = new HashSet<>();
 }
