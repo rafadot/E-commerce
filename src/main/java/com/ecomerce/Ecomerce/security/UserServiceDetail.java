@@ -26,7 +26,7 @@ public class UserServiceDetail implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Account account = accountRepository.findByEmail(username)
-                .orElseThrow(()-> new BadRequestException("E-mail inválido"));
+                .orElseThrow(()-> new BadRequestException("E-mail não cadastrado"));
 
         return User.builder()
                 .username(account.getEmail())

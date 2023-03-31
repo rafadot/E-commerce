@@ -1,10 +1,7 @@
 package com.ecomerce.Ecomerce.V1.dto.account;
 
 import com.ecomerce.Ecomerce.V1.model.Role;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 import java.util.Set;
@@ -15,6 +12,7 @@ import java.util.stream.Collectors;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class AccountResponse {
     private UUID id;
     private String fullName;

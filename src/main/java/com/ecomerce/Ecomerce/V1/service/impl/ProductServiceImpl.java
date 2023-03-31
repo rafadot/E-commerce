@@ -4,18 +4,20 @@ import com.ecomerce.Ecomerce.V1.dto.product.ProductRequest;
 import com.ecomerce.Ecomerce.V1.dto.product.ProductResponse;
 import com.ecomerce.Ecomerce.V1.model.Product;
 import com.ecomerce.Ecomerce.V1.model.Sale;
+import com.ecomerce.Ecomerce.V1.model.enums.RoleType;
 import com.ecomerce.Ecomerce.V1.repository.ProductRepository;
 import com.ecomerce.Ecomerce.V1.repository.SaleRepository;
 import com.ecomerce.Ecomerce.V1.service.interfaces.AccountService;
 import com.ecomerce.Ecomerce.V1.service.interfaces.ProductService;
+import com.ecomerce.Ecomerce.V1.util.AccountUtil;
 import com.ecomerce.Ecomerce.V1.util.CloudUtil;
 import com.ecomerce.Ecomerce.V1.util.ConversionUtil;
+import com.ecomerce.Ecomerce.exceptions.BadRequestException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.net.BindException;
 import java.util.List;
 
 @Service
@@ -28,11 +30,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductResponse create(ProductRequest request, MultipartFile file) throws IOException {
-        if(accountService.accountContext().getRole().stream()
-                .noneMatch(role -> role.getName().equals("BRAND"))
-        && accountService.accountContext().getRole().stream()
-                .noneMatch(role -> role.getName().equals("ADMIN")))
-            throw new BindException("A criação de produtos é reservada apenas para MARCAS ou ADMs!");
+        if(!AccountUtil.containRole(accountService.accountContext().getRole(), "ADMIN,BRAND"))
+            throw new BadRequestException("A criação de produtos é reservada apenas para MARCAS ou ADMs!");
 
         Product product = Product
                 .builder()

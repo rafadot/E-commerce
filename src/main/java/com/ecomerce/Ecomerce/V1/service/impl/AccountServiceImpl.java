@@ -3,10 +3,16 @@ package com.ecomerce.Ecomerce.V1.service.impl;
 import com.ecomerce.Ecomerce.V1.dto.account.AccountRequest;
 import com.ecomerce.Ecomerce.V1.dto.account.AccountResponse;
 import com.ecomerce.Ecomerce.V1.model.Account;
+import com.ecomerce.Ecomerce.V1.model.Brand;
 import com.ecomerce.Ecomerce.V1.model.PasswordRecovery;
+import com.ecomerce.Ecomerce.V1.model.Role;
+import com.ecomerce.Ecomerce.V1.model.enums.RoleType;
 import com.ecomerce.Ecomerce.V1.repository.AccountRepository;
+import com.ecomerce.Ecomerce.V1.repository.BrandRepository;
 import com.ecomerce.Ecomerce.V1.repository.RoleRepository;
 import com.ecomerce.Ecomerce.V1.service.interfaces.AccountService;
+import com.ecomerce.Ecomerce.V1.service.interfaces.BrandService;
+import com.ecomerce.Ecomerce.V1.util.AccountUtil;
 import com.ecomerce.Ecomerce.exceptions.BadRequestException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
@@ -15,21 +21,24 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class AccountServiceImpl implements AccountService {
-
     private final AccountRepository accountRepository;
     private final PasswordEncoder encoder;
     private final RoleRepository roleRepository;
+    private final BrandService brandService;
+    private final BrandRepository brandRepository;
 
     @Override
     public AccountResponse create(AccountRequest request) {
-        if(accountRepository.findByEmail(request.getEmail()).isPresent() && !request.getEmail().equals("test"))
+        if(accountRepository.findByEmail(request.getEmail()).isPresent())
             throw new BadRequestException("E-mail já cadastrado");
 
         PasswordRecovery passwordRecovery = PasswordRecovery
@@ -51,15 +60,68 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public List<AccountResponse> getAll() {
-        if(accountContext().getRole().stream().noneMatch(role -> role.getName().toString().equals("ADMIN")))
-            throw new BadRequestException("Rota reservada para desenvolvimento. Uso excluiso para ADMS");
+    public Map<String, String> addRole(RoleType type , String nameIfBrand) {
+        Account account = accountContext();
+        if(account.getRole().size() == 3)
+            throw new BadRequestException("Você ja possui todas as funções");
 
-        return accountRepository.findAll().stream().map(m -> {
-            AccountResponse response = new AccountResponse();
-            BeanUtils.copyProperties(m, response);
+        if(AccountUtil.containRole(account.getRole(),type.toString()))
+            throw new BadRequestException("Você já possui esta Role");
+
+        if(type.toString().equals("BRAND") && nameIfBrand.equals(""))
+            throw new BadRequestException("Para se tornar uma marca você precisa informar um nome para marca!");
+
+        if(nameIfBrand.equals("")){
+            account.getRole().add(roleRepository.findByName(type.toString()));
+            accountRepository.save(account);
+
+            Map<String,String> response = new HashMap<>();
+            response.put("message", account.getFullName().split(" ")[0] + ", " + type + " foi adcionado a sua lista de funções!");
+            response.put("roles", account.getRole().stream().map(Role::getName).collect(Collectors.toList()).toString());
+
             return response;
-        }).collect(Collectors.toList());
+        }
+
+        Brand brand = brandService.create(nameIfBrand);
+        account.setBrand(brand);
+        account.getRole().add(roleRepository.findByName(type.toString()));
+        accountRepository.save(account);
+
+        Map<String,String> response = new HashMap<>();
+        response.put("brandMessage",nameIfBrand + " crado(a) com sucesso!");
+        response.put("message", account.getFullName().split(" ")[0] + ", " + type + " foi adcionado a sua lista de funções!");
+        response.put("roles", account.getRole().stream().map(Role::getName).collect(Collectors.toList()).toString());
+
+        return response;
+    }
+
+    @Override
+    public Map<String, String> removeRole(RoleType type) {
+        Account account = accountContext();
+        if(account.getRole().size() == 1)
+            throw new BadRequestException("Você precisa ter ao menos 1 função");
+
+        if(!AccountUtil.containRole(account.getRole(),type.toString()))
+            throw new BadRequestException("Você não possui esta Role");
+
+        Map<String,String> response = new HashMap<>();
+
+        if(type.toString().equals("BRAND")){
+            Brand brand = account.getBrand();
+            response.put("brandMessage",brand.getName() + " deixou de ser uma marca!");
+
+            account.setBrand(null);
+            accountRepository.save(account);
+            brandRepository.delete(brand);
+        }
+
+        account.getRole().remove(roleRepository.findByName(type.toString()));
+        accountRepository.save(account);
+
+        response.put("message", account.getFullName().split(" ")[0] + ", " + type + " foi removido(a) da sua lista de funções!");
+        response.put("roles", account.getRole().stream().map(Role::getName).collect(Collectors.toList()).toString());
+
+        return response;
     }
 
     @Override
@@ -82,6 +144,14 @@ public class AccountServiceImpl implements AccountService {
             throw new BadRequestException("E-mail não cadastrado!");
 
         return account.get();
+    }
+
+    @Override
+    public String accountDelete() {
+        Account account = accountContext();
+        account.getRole().clear();
+        accountRepository.delete(account);
+        return "Sua conta foi deletado com sucesso!";
     }
 
 }
