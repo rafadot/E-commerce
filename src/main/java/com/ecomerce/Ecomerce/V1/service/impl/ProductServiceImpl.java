@@ -1,37 +1,41 @@
 package com.ecomerce.Ecomerce.V1.service.impl;
 
+import com.ecomerce.Ecomerce.V1.dto.offer.OfferRequest;
+import com.ecomerce.Ecomerce.V1.dto.offer.OfferResponse;
 import com.ecomerce.Ecomerce.V1.dto.product.ProductRequest;
 import com.ecomerce.Ecomerce.V1.dto.product.ProductResponse;
 import com.ecomerce.Ecomerce.V1.model.Account;
 import com.ecomerce.Ecomerce.V1.model.Brand;
+import com.ecomerce.Ecomerce.V1.model.Offer;
 import com.ecomerce.Ecomerce.V1.model.Product;
-import com.ecomerce.Ecomerce.V1.model.Sale;
 import com.ecomerce.Ecomerce.V1.repository.BrandRepository;
+import com.ecomerce.Ecomerce.V1.repository.OfferRepository;
 import com.ecomerce.Ecomerce.V1.repository.ProductRepository;
-import com.ecomerce.Ecomerce.V1.repository.SaleRepository;
 import com.ecomerce.Ecomerce.V1.service.interfaces.AccountService;
 import com.ecomerce.Ecomerce.V1.service.interfaces.BrandService;
 import com.ecomerce.Ecomerce.V1.service.interfaces.ProductService;
 import com.ecomerce.Ecomerce.V1.util.AccountUtil;
-import com.ecomerce.Ecomerce.V1.util.CloudUtil;
 import com.ecomerce.Ecomerce.V1.util.ConversionUtil;
+import com.ecomerce.Ecomerce.V1.util.OfferUtil;
 import com.ecomerce.Ecomerce.exceptions.BadRequestException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
-    private final SaleRepository saleRepository;
     private final AccountService accountService;
     private final BrandRepository brandRepository;
     private final BrandService brandService;
+    private final OfferRepository offerRepository;
 
     @Override
     public ProductResponse create(ProductRequest request, MultipartFile file) throws IOException {
@@ -39,38 +43,94 @@ public class ProductServiceImpl implements ProductService {
         if(!AccountUtil.containRole(account.getRole(), "BRAND"))
             throw new BadRequestException("A criação de produtos é reservada apenas para marcas!");
 
-        Product product = Product
-                .builder()
-                .name(request.getName())
-                .profile(file != null ? CloudUtil.uploadImage(file) : null)
-                .color(request.getColor())
-                .priceReal(ConversionUtil.dollarToReal(request.getPriceDollar()))
-                .priceDollar(request.getPriceDollar())
-                .descriptionEn(request.getDescriptionEn())
-                .descriptionBr(request.getDescriptionBr())
-                .sale(saleRepository.save(new Sale(false)))
-                .build();
-
-        productRepository.save(product);
-        brandService.addProduct(account.getBrand(),product);
-
-        return ProductResponse
-                .builder()
-                .id(product.getId())
-                .name(product.getName())
-                .brand(account.getBrand().getName())
-                .profile(product.getProfile())
-                .color(product.getColor())
-                .priceReal("R$" + ConversionUtil.formatMoney(product.getPriceReal()))
-                .priceDollar("$" + ConversionUtil.formatMoney(product.getPriceDollar()))
-                .descriptionEn(product.getDescriptionEn())
-                .descriptionBr(product.getDescriptionBr())
-                .sale(product.getSale())
-                .build();
+        return brandService.addProduct(account.getBrand(),request,file);
     }
 
     @Override
-    public List<Product> getAll() {
-        return productRepository.findAll();
+    public List<ProductResponse> findByBrandName(String brandName) {
+        Brand brand = brandRepository.findByNameIgnoreCase(brandName)
+                .orElseThrow(()-> new BadRequestException("Essa marca não existe!"));
+
+        return brand.getProduct()
+                .stream()
+                .map(m-> ProductResponse
+                        .builder()
+                        .id(m.getId())
+                        .name(m.getName())
+                        .color(m.getColor())
+                        .offer(OfferUtil.buildOfferResponse(m.getOffer()))
+                        .descriptionEn(m.getDescriptionEn())
+                        .descriptionBr(m.getDescriptionBr())
+                        .gender(m.getGender())
+                        .priceReal("R$" + ConversionUtil.formatMoney(m.getPriceReal()))
+                        .priceDollar("$" + ConversionUtil.formatMoney(m.getPriceDollar()))
+                        .profile(m.getProfile())
+                        .build()).collect(Collectors.toList());
     }
+
+    @Override
+    public String deleteAllProducts() {
+        Brand brand = accountService.accountContext().getBrand();
+
+        if(brand.getProduct() == null) {
+            throw new BadRequestException("Você não possui produtos para deletar");
+        }
+
+        List<Product> productList = brand.getProduct();
+        brand.setProduct(null);
+        brandRepository.save(brand);
+
+
+        for(Product product : productList){
+            productRepository.delete(product);
+        }
+
+        return "Seus produtos foram removidos com Sucesso!";
+    }
+
+    @Override
+    public OfferResponse createOffer(OfferRequest offerRequest) {
+        Brand brand = accountService.accountContext().getBrand();
+        Product product = null;
+        boolean flag = false;
+        for(Product p : brand.getProduct()){
+            if (p.getName().equals(offerRequest.getProductName())) {
+                flag = true;
+                product = p;
+                break;
+            }
+        }
+        if(!flag)
+            throw new BadRequestException("Sua marca não possui esse produto!");
+
+        BigDecimal priceInDollar = product.getPriceDollar();
+        BigDecimal percentage = new BigDecimal(String.valueOf(offerRequest.getPercentage()));
+        percentage = percentage.divide(new BigDecimal("100"));
+        BigDecimal offerPriceDollar = priceInDollar.subtract(priceInDollar.multiply(percentage));
+
+        Offer offer = Offer
+                .builder()
+                .id(product.getOffer().getId())
+                .status(true)
+                .percentage(offerRequest.getPercentage())
+                .expiration(offerRequest.getExpiration())
+                .offerPriceDollar(offerPriceDollar)
+                .offerPriceReal(ConversionUtil.dollarToReal(offerPriceDollar))
+                .build();
+
+        offerRepository.save(offer);
+
+        return OfferResponse
+                .builder()
+                .id(offer.getId())
+                .status(offer.getStatus())
+                .percentage(offer.getPercentage() + "% Off")
+                .expiration(offer.getExpiration())
+                .offerPriceDollar("$" + ConversionUtil.formatMoney(offer.getOfferPriceDollar()))
+                .offerPriceReal("R$" + ConversionUtil.formatMoney(offer.getOfferPriceReal()))
+                .build();
+
+    }
+
+
 }

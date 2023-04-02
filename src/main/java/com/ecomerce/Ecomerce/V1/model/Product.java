@@ -1,5 +1,6 @@
 package com.ecomerce.Ecomerce.V1.model;
 
+import com.ecomerce.Ecomerce.V1.model.enums.Gender;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
@@ -20,12 +21,14 @@ public class Product {
     private String name;
     private String profile;
     private String color;
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
     private BigDecimal priceReal;
     private BigDecimal priceDollar;
     private String descriptionEn;
     private String descriptionBr;
     @OneToOne(cascade = CascadeType.ALL)
-    private Sale sale;
+    private Offer offer;
 
     @ManyToOne
     @JoinColumn(name = "brand_id", updatable = true, insertable = true)

@@ -1,0 +1,1 @@
+ALTER TABLE sale RENAME TO offer;
