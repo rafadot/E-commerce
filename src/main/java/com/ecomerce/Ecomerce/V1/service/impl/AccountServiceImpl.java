@@ -20,9 +20,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -69,9 +71,9 @@ public class AccountServiceImpl implements AccountService {
             throw new BadRequestException("Você já possui esta Role");
 
         if(type.toString().equals("BRAND") && nameIfBrand.equals(""))
-            throw new BadRequestException("Para se tornar uma marca você precisa informar um nome para marca!");
+            throw new BadRequestException("Para se tornar uma marca você precisa informar um nome para ela!");
 
-        if(nameIfBrand.equals("")){
+        if(!type.toString().equals("BRAND")){
             account.getRole().add(roleRepository.findByName(type.toString()));
             accountRepository.save(account);
 
@@ -88,7 +90,7 @@ public class AccountServiceImpl implements AccountService {
         accountRepository.save(account);
 
         Map<String,String> response = new HashMap<>();
-        response.put("brandMessage",nameIfBrand + " crado(a) com sucesso!");
+        response.put("brandMessage",nameIfBrand + " criado(a) com sucesso!");
         response.put("message", account.getFullName().split(" ")[0] + ", " + type + " foi adcionado a sua lista de funções!");
         response.put("roles", account.getRole().stream().map(Role::getName).collect(Collectors.toList()).toString());
 

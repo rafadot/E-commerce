@@ -29,6 +29,6 @@ public class Account {
     private Set<Role> role = new HashSet<>();
     @OneToOne(cascade = CascadeType.ALL)
     private PasswordRecovery passwordRecovery;
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL,orphanRemoval = true)
     private Brand brand;
 }

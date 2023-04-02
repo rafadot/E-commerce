@@ -14,6 +14,7 @@ import java.util.UUID;
 public class ProductResponse {
     private UUID id;
     private String name;
+    private String brand;
     private String profile;
     private String color;
     private String priceReal;

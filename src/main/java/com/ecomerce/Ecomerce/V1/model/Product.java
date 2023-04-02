@@ -1,5 +1,6 @@
 package com.ecomerce.Ecomerce.V1.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -25,4 +26,9 @@ public class Product {
     private String descriptionBr;
     @OneToOne(cascade = CascadeType.ALL)
     private Sale sale;
+
+    @ManyToOne
+    @JoinColumn(name = "brand_id", updatable = true, insertable = true)
+    @JsonIgnore
+    private Brand brand;
 }
