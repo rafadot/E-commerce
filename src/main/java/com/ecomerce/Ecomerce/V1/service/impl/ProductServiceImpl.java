@@ -15,6 +15,7 @@ import com.ecomerce.Ecomerce.V1.service.interfaces.AccountService;
 import com.ecomerce.Ecomerce.V1.service.interfaces.BrandService;
 import com.ecomerce.Ecomerce.V1.service.interfaces.ProductService;
 import com.ecomerce.Ecomerce.V1.util.AccountUtil;
+import com.ecomerce.Ecomerce.V1.util.CloudUtil;
 import com.ecomerce.Ecomerce.V1.util.ConversionUtil;
 import com.ecomerce.Ecomerce.V1.util.OfferUtil;
 import com.ecomerce.Ecomerce.exceptions.BadRequestException;
@@ -69,10 +70,10 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public String deleteAllProducts() {
+    public String deleteAllProducts() throws IOException {
         Brand brand = accountService.accountContext().getBrand();
 
-        if(brand.getProduct() == null) {
+        if(brand.getProduct() == null || brand.getProduct().size() == 0) {
             throw new BadRequestException("Você não possui produtos para deletar");
         }
 
@@ -80,8 +81,9 @@ public class ProductServiceImpl implements ProductService {
         brand.setProduct(null);
         brandRepository.save(brand);
 
-
         for(Product product : productList){
+            if(product.getProfile() != null)
+                CloudUtil.deleteImage(product.getProfile());
             productRepository.delete(product);
         }
 

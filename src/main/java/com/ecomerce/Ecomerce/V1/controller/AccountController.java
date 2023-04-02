@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
+import java.io.IOException;
 import java.util.Map;
 
 @RestController
@@ -33,7 +33,7 @@ public class AccountController {
     }
 
     @GetMapping("remove-role")
-    public ResponseEntity<Map<String, String>> removeRole(@RequestParam RoleType type){
+    public ResponseEntity<Map<String, String>> removeRole(@RequestParam RoleType type) throws IOException {
         return new ResponseEntity<>(accountService.removeRole(type),HttpStatus.OK);
     }
 

@@ -14,6 +14,6 @@ import java.util.List;
 public interface ProductService {
     ProductResponse create (ProductRequest request, MultipartFile file) throws IOException;
     List<ProductResponse> findByBrandName(String brandName);
-    String deleteAllProducts();
+    String deleteAllProducts() throws IOException;
     OfferResponse createOffer(OfferRequest offerRequest);
 }

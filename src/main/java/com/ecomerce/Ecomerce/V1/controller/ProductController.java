@@ -35,7 +35,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/delete-all-products")
-    public ResponseEntity<String> deleteAllProducts(){
+    public ResponseEntity<String> deleteAllProducts() throws IOException {
         return new ResponseEntity<>(productService.deleteAllProducts(),HttpStatus.OK);
     }
 

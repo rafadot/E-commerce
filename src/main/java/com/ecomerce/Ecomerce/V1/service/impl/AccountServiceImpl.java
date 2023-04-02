@@ -2,17 +2,17 @@ package com.ecomerce.Ecomerce.V1.service.impl;
 
 import com.ecomerce.Ecomerce.V1.dto.account.AccountRequest;
 import com.ecomerce.Ecomerce.V1.dto.account.AccountResponse;
-import com.ecomerce.Ecomerce.V1.model.Account;
-import com.ecomerce.Ecomerce.V1.model.Brand;
-import com.ecomerce.Ecomerce.V1.model.PasswordRecovery;
-import com.ecomerce.Ecomerce.V1.model.Role;
+import com.ecomerce.Ecomerce.V1.model.*;
 import com.ecomerce.Ecomerce.V1.model.enums.RoleType;
 import com.ecomerce.Ecomerce.V1.repository.AccountRepository;
 import com.ecomerce.Ecomerce.V1.repository.BrandRepository;
+import com.ecomerce.Ecomerce.V1.repository.ProductRepository;
 import com.ecomerce.Ecomerce.V1.repository.RoleRepository;
 import com.ecomerce.Ecomerce.V1.service.interfaces.AccountService;
 import com.ecomerce.Ecomerce.V1.service.interfaces.BrandService;
+import com.ecomerce.Ecomerce.V1.service.interfaces.ProductService;
 import com.ecomerce.Ecomerce.V1.util.AccountUtil;
+import com.ecomerce.Ecomerce.V1.util.CloudUtil;
 import com.ecomerce.Ecomerce.exceptions.BadRequestException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -37,6 +38,7 @@ public class AccountServiceImpl implements AccountService {
     private final RoleRepository roleRepository;
     private final BrandService brandService;
     private final BrandRepository brandRepository;
+    private final ProductRepository productRepository;
 
     @Override
     public AccountResponse create(AccountRequest request) {
@@ -98,7 +100,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public Map<String, String> removeRole(RoleType type) {
+    public Map<String, String> removeRole(RoleType type) throws IOException {
         Account account = accountContext();
         if(account.getRole().size() == 1)
             throw new BadRequestException("Você precisa ter ao menos 1 função");
@@ -111,6 +113,11 @@ public class AccountServiceImpl implements AccountService {
         if(type.toString().equals("BRAND")){
             Brand brand = account.getBrand();
             response.put("brandMessage",brand.getName() + " deixou de ser uma marca!");
+
+            for(Product product : brand.getProduct()){
+                if(product.getProfile() != null)
+                    CloudUtil.deleteImage(product.getProfile());
+            }
 
             account.setBrand(null);
             accountRepository.save(account);
