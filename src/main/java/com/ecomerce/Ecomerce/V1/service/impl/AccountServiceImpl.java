@@ -2,6 +2,7 @@ package com.ecomerce.Ecomerce.V1.service.impl;
 
 import com.ecomerce.Ecomerce.V1.dto.account.AccountRequest;
 import com.ecomerce.Ecomerce.V1.dto.account.AccountResponse;
+import com.ecomerce.Ecomerce.V1.dto.address.AddressRequest;
 import com.ecomerce.Ecomerce.V1.model.*;
 import com.ecomerce.Ecomerce.V1.model.enums.RoleType;
 import com.ecomerce.Ecomerce.V1.repository.AccountRepository;
@@ -9,6 +10,7 @@ import com.ecomerce.Ecomerce.V1.repository.BrandRepository;
 import com.ecomerce.Ecomerce.V1.repository.ProductRepository;
 import com.ecomerce.Ecomerce.V1.repository.RoleRepository;
 import com.ecomerce.Ecomerce.V1.service.interfaces.AccountService;
+import com.ecomerce.Ecomerce.V1.service.interfaces.AddressService;
 import com.ecomerce.Ecomerce.V1.service.interfaces.BrandService;
 import com.ecomerce.Ecomerce.V1.service.interfaces.ProductService;
 import com.ecomerce.Ecomerce.V1.util.AccountUtil;
@@ -25,9 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,7 +38,7 @@ public class AccountServiceImpl implements AccountService {
     private final RoleRepository roleRepository;
     private final BrandService brandService;
     private final BrandRepository brandRepository;
-    private final ProductRepository productRepository;
+    private final AddressService addressService;
 
     @Override
     public AccountResponse create(AccountRequest request) {
@@ -161,6 +161,22 @@ public class AccountServiceImpl implements AccountService {
         account.getRole().clear();
         accountRepository.delete(account);
         return "Sua conta foi deletado com sucesso!";
+    }
+
+    @Override
+    public Address createAddress(AddressRequest addressRequest) {
+        Account account = accountContext();
+        return addressService.create(addressRequest,account);
+    }
+
+    @Override
+    public String removeAddress(UUID addressID) {
+        return addressService.remove(accountContext(),addressID);
+    }
+
+    @Override
+    public List<Address> getAddresses() {
+        return addressService.getAddresses(accountContext());
     }
 
 }

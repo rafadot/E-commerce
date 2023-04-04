@@ -1,11 +1,12 @@
 package com.ecomerce.Ecomerce.V1.model;
 
 import lombok.*;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import javax.validation.Valid;
+import java.util.*;
 
 @Entity
 @Getter
@@ -20,6 +21,7 @@ public class Account {
     private String fullName;
     private String email;
     private String password;
+
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "account_role",
@@ -27,8 +29,15 @@ public class Account {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Role> role = new HashSet<>();
+
     @OneToOne(cascade = CascadeType.ALL)
     private PasswordRecovery passwordRecovery;
+
     @OneToOne(cascade = CascadeType.ALL,orphanRemoval = true)
     private Brand brand;
+
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @Valid
+    private List<Address> addresses = new ArrayList<>();
 }

@@ -3,9 +3,13 @@ package com.ecomerce.Ecomerce.V1.model;
 import com.ecomerce.Ecomerce.V1.model.enums.Gender;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -27,6 +31,7 @@ public class Product {
     private BigDecimal priceDollar;
     private String descriptionEn;
     private String descriptionBr;
+
     @OneToOne(cascade = CascadeType.ALL)
     private Offer offer;
 

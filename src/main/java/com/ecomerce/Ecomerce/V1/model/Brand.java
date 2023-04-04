@@ -23,6 +23,7 @@ public class Brand {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
     private String name;
+
     @OneToMany(mappedBy = "brand", cascade = CascadeType.ALL)
     @LazyCollection(LazyCollectionOption.FALSE)
     @Valid
