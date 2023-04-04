@@ -102,11 +102,13 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Map<String, String> removeRole(RoleType type) throws IOException {
         Account account = accountContext();
-        if(account.getRole().size() == 1)
-            throw new BadRequestException("Você precisa ter ao menos 1 função");
 
         if(!AccountUtil.containRole(account.getRole(),type.toString()))
             throw new BadRequestException("Você não possui esta Role");
+
+        if(account.getRole().size() == 1) {
+            throw new BadRequestException("Você precisa ter ao menos 1 função");
+        }
 
         Map<String,String> response = new HashMap<>();
 

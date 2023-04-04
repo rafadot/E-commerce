@@ -30,7 +30,7 @@ public class CloudUtil {
         return upload.get("secure_url").toString();
     }
 
-    public static void deleteImage(String linkImage) throws IOException {
+    public static void deleteImage(String linkImage){
         Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
                 "cloud_name", "dqpeupeg6",
                 "api_key", "913252413593367",
@@ -40,7 +40,11 @@ public class CloudUtil {
         String fileId = extractImageId(linkImage);
         log.info(fileId);
 
-        cloudinary.uploader().destroy(fileId,ObjectUtils.emptyMap());
+        try {
+            cloudinary.uploader().destroy(fileId,ObjectUtils.emptyMap());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private static String extractImageId(String linkImage){

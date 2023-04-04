@@ -2,13 +2,16 @@ package com.ecomerce.Ecomerce.V1.service.impl;
 
 import com.ecomerce.Ecomerce.V1.dto.product.ProductRequest;
 import com.ecomerce.Ecomerce.V1.dto.product.ProductResponse;
+import com.ecomerce.Ecomerce.V1.model.Account;
 import com.ecomerce.Ecomerce.V1.model.Brand;
 import com.ecomerce.Ecomerce.V1.model.Product;
 import com.ecomerce.Ecomerce.V1.model.Offer;
 import com.ecomerce.Ecomerce.V1.repository.BrandRepository;
 import com.ecomerce.Ecomerce.V1.repository.ProductRepository;
 import com.ecomerce.Ecomerce.V1.repository.OfferRepository;
+import com.ecomerce.Ecomerce.V1.service.interfaces.AccountService;
 import com.ecomerce.Ecomerce.V1.service.interfaces.BrandService;
+import com.ecomerce.Ecomerce.V1.service.interfaces.ProductService;
 import com.ecomerce.Ecomerce.V1.util.CloudUtil;
 import com.ecomerce.Ecomerce.V1.util.ConversionUtil;
 import com.ecomerce.Ecomerce.V1.util.OfferUtil;
@@ -18,7 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Optional;
 
 @Service

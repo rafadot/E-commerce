@@ -70,8 +70,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public String deleteAllProducts() throws IOException {
+    public String deleteAll() throws IOException {
         Brand brand = accountService.accountContext().getBrand();
+
+        if(brand == null)
+            throw new BadRequestException("Você não pode deletar produtos pois não possui uma marca!");
 
         if(brand.getProduct() == null || brand.getProduct().size() == 0) {
             throw new BadRequestException("Você não possui produtos para deletar");
