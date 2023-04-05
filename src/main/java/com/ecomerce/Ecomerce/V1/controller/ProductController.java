@@ -40,7 +40,7 @@ public class ProductController {
     }
 
     @PostMapping("/create-offer")
-    public ResponseEntity<OfferResponse> createOffer(@RequestBody OfferRequest offerRequest){
+    public ResponseEntity<OfferResponse> createOffer(@RequestBody @Valid OfferRequest offerRequest){
         return new ResponseEntity<>(productService.createOffer(offerRequest),HttpStatus.CREATED);
     }
 }

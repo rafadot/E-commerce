@@ -1,6 +1,6 @@
 package com.ecomerce.Ecomerce.V1.service.interfaces;
 
-import com.ecomerce.Ecomerce.V1.dto.login.LoginRequest;
+import com.ecomerce.Ecomerce.V1.dto.LoginRequest;
 import freemarker.template.TemplateException;
 
 import javax.mail.MessagingException;

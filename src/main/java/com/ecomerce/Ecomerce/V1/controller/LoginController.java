@@ -1,6 +1,6 @@
 package com.ecomerce.Ecomerce.V1.controller;
 
-import com.ecomerce.Ecomerce.V1.dto.login.LoginRequest;
+import com.ecomerce.Ecomerce.V1.dto.LoginRequest;
 import com.ecomerce.Ecomerce.V1.service.interfaces.LoginService;
 import freemarker.template.TemplateException;
 import lombok.RequiredArgsConstructor;

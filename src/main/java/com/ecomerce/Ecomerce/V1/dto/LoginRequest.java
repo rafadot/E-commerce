@@ -1,4 +1,4 @@
-package com.ecomerce.Ecomerce.V1.dto.login;
+package com.ecomerce.Ecomerce.V1.dto;
 
 import lombok.*;
 

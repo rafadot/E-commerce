@@ -1,6 +1,6 @@
 package com.ecomerce.Ecomerce.V1.service.impl;
 
-import com.ecomerce.Ecomerce.V1.dto.address.AddressRequest;
+import com.ecomerce.Ecomerce.V1.dto.AddressRequest;
 import com.ecomerce.Ecomerce.V1.model.Account;
 import com.ecomerce.Ecomerce.V1.model.Address;
 import com.ecomerce.Ecomerce.V1.repository.AccountRepository;
@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 

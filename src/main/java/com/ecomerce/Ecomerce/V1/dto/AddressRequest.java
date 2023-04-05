@@ -1,4 +1,4 @@
-package com.ecomerce.Ecomerce.V1.dto.address;
+package com.ecomerce.Ecomerce.V1.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

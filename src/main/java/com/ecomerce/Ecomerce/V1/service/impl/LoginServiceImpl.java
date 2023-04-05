@@ -1,6 +1,6 @@
 package com.ecomerce.Ecomerce.V1.service.impl;
 
-import com.ecomerce.Ecomerce.V1.dto.login.LoginRequest;
+import com.ecomerce.Ecomerce.V1.dto.LoginRequest;
 import com.ecomerce.Ecomerce.V1.model.Account;
 import com.ecomerce.Ecomerce.V1.repository.AccountRepository;
 import com.ecomerce.Ecomerce.V1.service.interfaces.AccountService;

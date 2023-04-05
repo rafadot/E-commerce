@@ -1,4 +1,4 @@
-package com.ecomerce.Ecomerce.V1.dto.offer;
+package com.ecomerce.Ecomerce.V1.dto.voucher;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
@@ -14,13 +14,13 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class OfferRequest {
+public class VoucherRequest {
     @NotNull
-    private String productName;
+    private String name;
     @NotNull
-    private Integer percentage;
-    @JsonFormat(shape = JsonFormat.Shape.STRING ,pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime dateExpiration;
     @NotNull
-    private LocalDateTime expiration;
+    private Integer discountPercentage;
 }

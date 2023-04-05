@@ -2,7 +2,7 @@ package com.ecomerce.Ecomerce.V1.service.interfaces;
 
 import com.ecomerce.Ecomerce.V1.dto.account.AccountRequest;
 import com.ecomerce.Ecomerce.V1.dto.account.AccountResponse;
-import com.ecomerce.Ecomerce.V1.dto.address.AddressRequest;
+import com.ecomerce.Ecomerce.V1.dto.AddressRequest;
 import com.ecomerce.Ecomerce.V1.model.Account;
 import com.ecomerce.Ecomerce.V1.model.Address;
 import com.ecomerce.Ecomerce.V1.model.enums.RoleType;

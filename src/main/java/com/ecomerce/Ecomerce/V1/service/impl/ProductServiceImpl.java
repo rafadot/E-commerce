@@ -25,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -107,6 +108,9 @@ public class ProductServiceImpl implements ProductService {
         }
         if(!flag)
             throw new BadRequestException("Sua marca não possui esse produto!");
+
+        if(offerRequest.getExpiration().isBefore(LocalDateTime.now()))
+            throw new BadRequestException("Informe uma data de expiração válida!");
 
         BigDecimal priceInDollar = product.getPriceDollar();
         BigDecimal percentage = new BigDecimal(String.valueOf(offerRequest.getPercentage()));
