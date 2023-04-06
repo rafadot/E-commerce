@@ -15,3 +15,9 @@ This project focuses on learning. It is an API for an E-commerce that is still i
     <img alt="hibernate" src="https://img.shields.io/badge/Hibernate-59666C?style=for-the-badge&logo=Hibernate&logoColor=white">
     <img alt="google-cloud" src="https://img.shields.io/badge/Google_Cloud-4285F4?style=for-the-badge&logo=google-cloud&logoColor=white">
 </div>
+
+## Diagram
+
+<div>
+    <img alt="diagram" src="src/main/resources/templates/diagram.svg">
+</div>
