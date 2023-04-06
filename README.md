@@ -19,5 +19,5 @@ This project focuses on learning. It is an API for an E-commerce that is still i
 ## Diagram
 
 <div>
-    <img alt="diagram" src="src/main/resources/templates/diagram.svg">
+    <img alt="diagram-ecommerce" src="src/main/resources/templates/diagram-ecommerce.png">
 </div>
