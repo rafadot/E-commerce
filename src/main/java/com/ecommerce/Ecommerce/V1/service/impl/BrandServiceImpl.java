@@ -44,8 +44,11 @@ public class BrandServiceImpl implements BrandService {
     public ProductResponse addProduct(Brand brand, ProductRequest productRequest, MultipartFile file) throws IOException {
         for(Product p : brand.getProduct()){
             if(p.getName().equals(productRequest.getName()))
-                throw new BadRequestException("Este produto já existe!");
+                throw new BadRequestException("Você já possui esse!");
         }
+
+        if(productRepository.findByName(productRequest.getName()).isPresent())
+            throw new BadRequestException("Esse produto já existe em outra marca!");
 
         Offer offer = new Offer();
         offer.setStatus(false);

@@ -11,6 +11,7 @@ import com.ecommerce.Ecommerce.V1.model.Product;
 import com.ecommerce.Ecommerce.V1.repository.BrandRepository;
 import com.ecommerce.Ecommerce.V1.repository.OfferRepository;
 import com.ecommerce.Ecommerce.V1.repository.ProductRepository;
+import com.ecommerce.Ecommerce.V1.repository.ProductsCartRepository;
 import com.ecommerce.Ecommerce.V1.service.interfaces.AccountService;
 import com.ecommerce.Ecommerce.V1.service.interfaces.BrandService;
 import com.ecommerce.Ecommerce.V1.service.interfaces.ProductService;
@@ -21,6 +22,7 @@ import com.ecommerce.Ecommerce.V1.util.OfferUtil;
 import com.ecommerce.Ecommerce.exceptions.BadRequestException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -38,6 +40,7 @@ public class ProductServiceImpl implements ProductService {
     private final BrandRepository brandRepository;
     private final BrandService brandService;
     private final OfferRepository offerRepository;
+    private final ProductsCartRepository cartRepository;
 
     @Override
     public ProductResponse create(ProductRequest request, MultipartFile file) throws IOException {
@@ -70,6 +73,7 @@ public class ProductServiceImpl implements ProductService {
                         .build()).collect(Collectors.toList());
     }
 
+    @Transactional
     @Override
     public String deleteAll() throws IOException {
         Brand brand = accountService.accountContext().getBrand();
@@ -88,6 +92,7 @@ public class ProductServiceImpl implements ProductService {
         for(Product product : productList){
             if(product.getProfile() != null)
                 CloudUtil.deleteImage(product.getProfile());
+            cartRepository.deleteAllByProductId(product.getId());
             productRepository.delete(product);
         }
 

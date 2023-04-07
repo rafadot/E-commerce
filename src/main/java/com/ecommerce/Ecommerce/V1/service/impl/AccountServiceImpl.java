@@ -7,6 +7,7 @@ import com.ecommerce.Ecommerce.V1.model.*;
 import com.ecommerce.Ecommerce.V1.model.enums.RoleType;
 import com.ecommerce.Ecommerce.V1.repository.AccountRepository;
 import com.ecommerce.Ecommerce.V1.repository.BrandRepository;
+import com.ecommerce.Ecommerce.V1.repository.ProductsCartRepository;
 import com.ecommerce.Ecommerce.V1.repository.RoleRepository;
 import com.ecommerce.Ecommerce.V1.service.interfaces.AccountService;
 import com.ecommerce.Ecommerce.V1.service.interfaces.AddressService;
@@ -20,6 +21,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.*;
@@ -34,6 +36,7 @@ public class AccountServiceImpl implements AccountService {
     private final BrandService brandService;
     private final BrandRepository brandRepository;
     private final AddressService addressService;
+    private final ProductsCartRepository cartRepository;
 
     @Override
     public AccountResponse create(AccountRequest request) {
@@ -94,6 +97,7 @@ public class AccountServiceImpl implements AccountService {
         return response;
     }
 
+    @Transactional
     @Override
     public Map<String, String> removeRole(RoleType type) throws IOException {
         Account account = accountContext();
@@ -112,6 +116,7 @@ public class AccountServiceImpl implements AccountService {
             response.put("brandMessage",brand.getName() + " deixou de ser uma marca!");
 
             for(Product product : brand.getProduct()){
+                cartRepository.deleteAllByProductId(product.getId());
                 if(product.getProfile() != null)
                     CloudUtil.deleteImage(product.getProfile());
             }
@@ -152,10 +157,12 @@ public class AccountServiceImpl implements AccountService {
         return account.get();
     }
 
+    @Transactional
     @Override
     public String accountDelete() {
         Account account = accountContext();
         account.getRole().clear();
+        cartRepository.deleteAllByAccountId(account.getId());
         accountRepository.delete(account);
         return "Sua conta foi deletado com sucesso!";
     }
