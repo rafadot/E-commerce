@@ -75,4 +75,10 @@ public class VoucherServiceImpl implements VoucherService {
                 .creatorName(account.getFullName())
                 .build();
     }
+
+    @Override
+    public Voucher valid(String voucherName) {
+        return voucherRepository.findByName(voucherName)
+                .orElseThrow(()-> new BadRequestException("Cupom inválido!"));
+    }
 }

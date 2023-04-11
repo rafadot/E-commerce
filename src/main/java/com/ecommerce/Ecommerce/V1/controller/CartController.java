@@ -2,6 +2,7 @@ package com.ecommerce.Ecommerce.V1.controller;
 
 import com.ecommerce.Ecommerce.V1.dto.product.ProductCartDto;
 import com.ecommerce.Ecommerce.V1.dto.voucher.VoucherRequest;
+import com.ecommerce.Ecommerce.V1.model.Voucher;
 import com.ecommerce.Ecommerce.V1.model.enums.VoucherType;
 import com.ecommerce.Ecommerce.V1.service.interfaces.CartService;
 import com.ecommerce.Ecommerce.V1.service.interfaces.VoucherService;
@@ -45,5 +46,10 @@ public class CartController {
     @GetMapping
     public ResponseEntity<List<ProductCartDto>> getCart(){
         return new ResponseEntity<>(cartService.getCart(),HttpStatus.OK);
+    }
+
+    @GetMapping("/voucher")
+    public ResponseEntity<Voucher> voucher(@RequestParam String voucherName){
+        return new ResponseEntity<>(voucherService.valid(voucherName),HttpStatus.OK);
     }
 }

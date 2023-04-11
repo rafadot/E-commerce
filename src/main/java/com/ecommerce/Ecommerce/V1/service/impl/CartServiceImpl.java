@@ -4,7 +4,6 @@ import com.ecommerce.Ecommerce.V1.dto.product.ProductCartDto;
 import com.ecommerce.Ecommerce.V1.model.Account;
 import com.ecommerce.Ecommerce.V1.model.Product;
 import com.ecommerce.Ecommerce.V1.model.ProductsCart;
-import com.ecommerce.Ecommerce.V1.repository.AccountRepository;
 import com.ecommerce.Ecommerce.V1.repository.ProductRepository;
 import com.ecommerce.Ecommerce.V1.repository.ProductsCartRepository;
 import com.ecommerce.Ecommerce.V1.service.interfaces.AccountService;
@@ -14,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
